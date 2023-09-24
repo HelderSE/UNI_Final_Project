@@ -1,0 +1,84 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Produtos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Produtos` (
+  `idProdutos` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL,
+  `categoria` VARCHAR(45) NULL,
+  `preco` FLOAT NULL,
+  `stock` INT NULL,
+  `informacao` VARCHAR(45) NULL,
+  `validade` DATE NULL,
+  PRIMARY KEY (`idProdutos`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`User`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`User` (
+  `idUser` INT NOT NULL AUTO_INCREMENT,
+  `saldo` FLOAT NULL,
+  PRIMARY KEY (`idUser`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Carrinho`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Carrinho` (
+  `idCarrinho` INT NOT NULL AUTO_INCREMENT,
+  `data` DATE NULL,
+  `precoTotal` FLOAT NULL,
+  `idUser` INT NOT NULL,
+  PRIMARY KEY (`idCarrinho`, `idUser`),
+  INDEX `idUser_idx` (`idUser` ASC) VISIBLE,
+  CONSTRAINT `idUser`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `mydb`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`ProdutosCarrinho`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`ProdutosCarrinho` (
+  `idProdutos` INT NOT NULL,
+  `idCarrinho` INT NOT NULL,
+  `quantidade` INT NULL,
+  PRIMARY KEY (`idProdutos`, `idCarrinho`),
+  INDEX `idCarrinho_idx` (`idCarrinho` ASC) VISIBLE,
+  CONSTRAINT `idProdutos`
+    FOREIGN KEY (`idProdutos`)
+    REFERENCES `mydb`.`Produtos` (`idProdutos`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idCarrinho`
+    FOREIGN KEY (`idCarrinho`)
+    REFERENCES `mydb`.`Carrinho` (`idCarrinho`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
